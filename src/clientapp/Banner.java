@@ -29,11 +29,10 @@ public class Banner extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(243, 241, 68));
+        setBackground(new java.awt.Color(204, 102, 0));
         setForeground(new java.awt.Color(87, 88, 203));
 
-        jLabel1.setFont(new java.awt.Font("Umpush", 0, 15)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(121, 111, 237));
+        jLabel1.setFont(new java.awt.Font("Umpush", 1, 15)); // NOI18N
         jLabel1.setText("NOTIFICATION SYSTEM");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
