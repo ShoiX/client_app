@@ -18,7 +18,7 @@ public class login extends javax.swing.JFrame {
     public JFrame opposite;
     public user User;
     public ClientApp parent;
-    private MysqlConnect con = new MysqlConnect();
+    public MysqlConnect con = new MysqlConnect();
     
     public login(ClientApp p, user u) {
         initComponents();
@@ -63,6 +63,8 @@ public class login extends javax.swing.JFrame {
                         User.email = r.getString(3);
                         User.firstname = r.getString(5);
                         User.lastname = r.getString(6);
+                        User.activated = r.getBoolean("status");
+                        User.token = r.getString("token");
                         l = "";
                         check = true;
                     }
@@ -222,10 +224,16 @@ public class login extends javax.swing.JFrame {
         boolean IsLogged = auth();
         // initialize main app
         if (IsLogged){
-            parent.viewMain();
-            this.dispose();
-            opposite.dispose();
-            con.close();
+            if (User.activated){
+                parent.viewMain();
+                this.dispose();
+                opposite.dispose();
+                con.close();
+            }
+            else{
+                Authentication a = new Authentication(User.UserId, User.token, this);
+                a.setVisible(true);
+            }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

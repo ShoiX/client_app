@@ -17,4 +17,6 @@ public class user {
     public String email;
     public String username;
     public String hash;
+    public boolean activated;
+    public String token;
 }

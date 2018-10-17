@@ -4,39 +4,108 @@
  * and open the template in the editor.
  */
 package clientapp;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author jerryco09
  */
+class RowPopup2 extends JPopupMenu{
+    public RowPopup2(Events2 events2){
+        JMenuItem delete = new JMenuItem("Cancel");
+        JMenuItem edit = new JMenuItem("Edit");
+        
+        // delete recipient item
+        delete.addActionListener((ActionEvent e) -> {
+            // Confirm to the user for deletion
+            int reply = JOptionPane.showConfirmDialog(null, "Do you really Cancel this event", "Confirmation", JOptionPane.YES_NO_OPTION);
+            if (reply != JOptionPane.YES_OPTION) {
+              return;
+            }
+            MysqlConnect c = new MysqlConnect();
+            int id = events2.SelectedID;
+            int res = c.queryUpdate("UPDATE memo SET deleted = 1 WHERE id = "+ id);
+            //alert user
+            if (res > 0){
+                JOptionPane.showMessageDialog(events2, "Memo Succesfully deleted");
+            }
+            else{
+                JOptionPane.showMessageDialog(events2, "An unexpected error has occured please try again");
+            }
+            events2.populate(c);
+        });
+        add(delete);
+        //add(edit);
+    }
+}
 public class Events2 extends javax.swing.JPanel {
     public NewEvent n;
     public user User;
-    public MysqlConnect c = new MysqlConnect();
+    public MysqlConnect c;
+    public int SelectedID;
+    private Events2 myalias;
     DefaultTableModel model;
     /**
      * Creates new form Events2
      */
     public Events2() {
         initComponents();
-    }
-    public void populate(){
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0);
-        try {
-               ResultSet r = c.query("SELECT * FROM memo WHERE user_id = "+User.UserId + " AND status = 0 ORDER BY schedule ASC");
-            while (r.next()){
-                String name = r.getString("name");
-                String message = r.getString("message");
-                String sched = r.getString("schedule").toString();
-                model.insertRow(jTable1.getRowCount(), new Object[] {name, message, sched});
+        myalias = this;
+        
+        // create popup for table
+        final RowPopup2 pop = new RowPopup2(myalias);
+        jTable1.addMouseListener(new MouseAdapter(){
+            public void mouseClicked(MouseEvent me){
+                JTable target = (JTable)me.getSource();
+                int row = target.getSelectedRow();
+                if (row == -1)
+                    return;
+                
+                if (SwingUtilities.isRightMouseButton(me)){
+                    SelectedID = Integer.parseInt(target.getModel().getValueAt(row, 0).toString());
+                    System.out.println(SelectedID);
+                    pop.show(me.getComponent(), me.getX(), me.getY());
+                    
+                }
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(Events2.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        });
+    }
+    public void populate(MysqlConnect conn){
+        
+        Thread executerefresh = new Thread(() -> {
+            System.out.println("Refreshing");
+            if (conn == null)
+                c = new MysqlConnect();
+            else
+                c = conn;
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0);
+            try {
+                   ResultSet r = c.query("SELECT * FROM memo WHERE user_id = "+User.UserId + " AND status = 0 AND `deleted` = 0 ORDER BY schedule ASC");
+                while (r.next()){
+                    int id = r.getInt("id");
+                    String name = r.getString("name");
+                    String message = r.getString("message");
+                    String sched = r.getString("schedule").toString();
+                    model.insertRow(jTable1.getRowCount(), new Object[] {id, name, message, sched});
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Events2.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            c.close();
+        });
+        executerefresh.start();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -59,22 +128,32 @@ public class Events2 extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Title", "Message", "Schedule"
+                "ID", "Title", "Message", "Schedule"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(6);
             jTable1.getColumnModel().getColumn(1).setResizable(false);
             jTable1.getColumnModel().getColumn(2).setResizable(false);
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
         }
 
         jButton1.setText("Add New");
@@ -128,7 +207,7 @@ public class Events2 extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        populate();
+        populate(null);
     }//GEN-LAST:event_jButton2ActionPerformed
 
 

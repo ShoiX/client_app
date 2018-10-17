@@ -72,8 +72,8 @@ public class signup extends javax.swing.JPanel {
                         @Override
                         public void run() {
                             try{
-                                String query = "INSERT INTO users(username, email, password, firstname,lastname, contact)"
-                            + "VALUES (?, ?, ?, ?, ?, ?)";
+                                String query = "INSERT INTO users(username, email, password, firstname,lastname, contact, token)"
+                            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
                                 PreparedStatement p = con.conn.prepareStatement(query);
                                 p.setString(1,Uname);
                                 p.setString(2, Email);
@@ -81,6 +81,7 @@ public class signup extends javax.swing.JPanel {
                                 p.setString(4, Fname);
                                 p.setString(5, Lname);
                                 p.setString(6, Contact);
+                                p.setString(7, Utils.randomString(5));
                                 p.execute();
                             } catch(SQLException ex){
                                 System.err.println(ex.getMessage());

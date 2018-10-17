@@ -9,6 +9,7 @@ import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 /**
  *
@@ -31,9 +32,7 @@ public class Utils {
         
         return res;
     }
-    public static void main(String args[]){
-        System.out.println(md5("mmdapo"));
-    }
+    
     public static boolean isValidEmailAddress(String email) {
        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
@@ -52,5 +51,19 @@ public class Utils {
         } catch (IOException e) {
             return false;
         }
+    }
+    
+    // generation of random string
+    static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    static SecureRandom rnd = new SecureRandom();
+
+    public static String randomString( int len ){
+       StringBuilder sb = new StringBuilder( len );
+       for( int i = 0; i < len; i++ ) 
+          sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
+       return sb.toString();
+    }
+    public static void main(String[] args) {
+        System.out.println(randomString(3));
     }
 }

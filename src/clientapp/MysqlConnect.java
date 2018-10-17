@@ -15,7 +15,8 @@ public class MysqlConnect {
     public MysqlConnect() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://mighty-steel-leg.tk:3306/hrer", "user", "Mmdapo09!");
+            conn = DriverManager.getConnection("jdbc:mysql://dbmslab.tk:3306/hrer", "user", "Mmdapo09!");
+            //conn = DriverManager.getConnection("jdbc:mysql://localhost:port","username" , "password");
             //return conn;
         }catch(Exception e) {
             System.out.println(e);
@@ -42,6 +43,36 @@ public class MysqlConnect {
         }
         return rs;
     }
+    public int queryUpdate(String q){
+       int r = 0;
+        try{
+            stmt = conn.createStatement();
+            String query = q;
+            r = stmt.executeUpdate(query);
+            
+        }
+        catch (SQLException ex) {
+            while (ex != null) {
+                System.out.println("SQL Exception: " + ex.getMessage());
+                ex = ex.getNextException();
+            }
+        }
+        catch (NullPointerException x){
+            System.out.println(x.toString());
+        }
+        return r;
+    }
+    public int getInsertID(PreparedStatement p){
+        try{
+            ResultSet rs = p.getGeneratedKeys();
+             if (rs.next()){
+                return rs.getInt(1);
+            }
+        }catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return 0;
+    }
     
     public void close(){
         try{
@@ -60,7 +91,7 @@ public class MysqlConnect {
                 System.out.println(r.getString(2));
             }
         }catch(SQLException ex){
-            
+            System.out.print(ex.getMessage());
         }
     }
     

@@ -31,7 +31,7 @@ public class MainApp extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Welcome Back, "+ User.firstname+"!");
         events22.User = User;
         try{
-            events22.populate();
+            events22.populate(null);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
