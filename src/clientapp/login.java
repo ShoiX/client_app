@@ -65,6 +65,8 @@ public class login extends javax.swing.JFrame {
                         User.lastname = r.getString(6);
                         User.activated = r.getBoolean("status");
                         User.token = r.getString("token");
+                        User.mobile = r.getString("contact");
+                        User.username = r.getString("username");
                         l = "";
                         check = true;
                     }
