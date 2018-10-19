@@ -26,6 +26,8 @@ public class MainApp extends javax.swing.JFrame {
         User.lastname = "Alaba";
         User.UserId = 4;
         User = u;
+        
+        
     }
     public void initUser(user u){
         User = u;
@@ -42,6 +44,7 @@ public class MainApp extends javax.swing.JFrame {
         
         
     }
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
