@@ -5,6 +5,10 @@
  */
 package clientapp;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  *
  * @author jerryco09
@@ -25,7 +29,8 @@ public class Profile extends javax.swing.JFrame {
         UnameFld.setText(User.username);
         MobileFld.setText(User.mobile);
         EmailFld.setText(User.email);
-        
+        Error1Lbl.setText("");
+        Error2Lbl.setText("");
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -56,12 +61,12 @@ public class Profile extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jPasswordField2 = new javax.swing.JPasswordField();
+        OldFld = new javax.swing.JPasswordField();
+        NewFld = new javax.swing.JPasswordField();
         jLabel12 = new javax.swing.JLabel();
-        jPasswordField3 = new javax.swing.JPasswordField();
+        ConfFld = new javax.swing.JPasswordField();
         jButton2 = new javax.swing.JButton();
-        jLabel13 = new javax.swing.JLabel();
+        Error2Lbl = new javax.swing.JLabel();
 
         setAlwaysOnTop(true);
 
@@ -85,6 +90,11 @@ public class Profile extends javax.swing.JFrame {
         Error1Lbl.setText("Error message here");
 
         jButton1.setText("UPDATE");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -179,9 +189,14 @@ public class Profile extends javax.swing.JFrame {
         jLabel12.setText("Repeat New");
 
         jButton2.setText("UPDATE PASSWORD");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
-        jLabel13.setForeground(new java.awt.Color(165, 13, 4));
-        jLabel13.setText("Error Message here");
+        Error2Lbl.setForeground(new java.awt.Color(165, 13, 4));
+        Error2Lbl.setText("Error Message here");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -200,8 +215,8 @@ public class Profile extends javax.swing.JFrame {
                             .addComponent(jLabel12))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPasswordField2, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
-                            .addComponent(jPasswordField3)))
+                            .addComponent(NewFld, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                            .addComponent(ConfFld)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(30, 30, 30)
                         .addComponent(jLabel9))
@@ -209,10 +224,10 @@ public class Profile extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jLabel10)
                         .addGap(18, 18, 18)
-                        .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(OldFld, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(109, 109, 109)
-                        .addComponent(jLabel13)))
+                        .addComponent(Error2Lbl)))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -223,20 +238,20 @@ public class Profile extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(OldFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel11)
-                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(NewFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(jLabel12))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPasswordField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(ConfFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(jLabel13)
+                .addComponent(Error2Lbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
                 .addGap(22, 22, 22))
@@ -274,6 +289,93 @@ public class Profile extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        String username = UnameFld.getText();
+        String email = EmailFld.getText();
+        String fname = FnameFld.getText();
+        String lname = LnameFld.getText();
+        String mobile = MobileFld.getText();
+        if (username.equals("") || email.equals("") || fname.equals("") || lname.equals("") || mobile.equals("")){
+            Error1Lbl.setText("Please Supply all fields");
+        }
+        else if (!Utils.isValidEmailAddress(email)){
+            Error1Lbl.setText("Invalid Email Address");
+        }
+        else if (mobile.length() != 10){
+            Error1Lbl.setText("Contact number invalid");
+        }
+        else{
+            PleaseWait w = new PleaseWait("Updating  info....");
+            w.setVisible(true);
+            MysqlConnect c = new MysqlConnect();
+            String query ="UPDATE users SET username = ?, email = ?, firstname = ?, lastname = ?, contact = ? WHERE id = ?";
+            try{
+                PreparedStatement p = c.conn.prepareStatement(query);
+                p.setString(1, username);
+                p.setString(2, email);
+                p.setString(3, fname);
+                p.setString(4, lname);
+                p.setString(5, mobile);
+                p.setInt(6, User.UserId);
+                p.executeUpdate();
+                w.dispose();
+                User.email = email;
+                User.firstname = fname;
+                User.lastname = lname;
+                User.mobile = mobile;
+                User.username = username;
+                c.close();
+            }catch(SQLException ex){
+                System.out.println(ex.getMessage());
+            }
+            
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        String old = new String(OldFld.getPassword());
+        String newP = new String(NewFld.getPassword());
+        String conf = new String(ConfFld.getPassword());
+        
+        if (old.equals("") || newP.equals("") || conf.equals("")){
+            Error2Lbl.setText("Please Supply all fields");
+        }
+        else if (!newP.equals(conf)){
+            Error2Lbl.setText("Conflicting Passwords");
+        }
+        else {
+            PleaseWait w2 = new PleaseWait("Updating info..");
+            w2.setVisible(true);
+            MysqlConnect c = new MysqlConnect();
+            ResultSet r = c.query("SELECT password FROM users WHERE id = "+User.UserId+" LIMIT 1");
+            try{
+                while (r.next()){
+                    String dbpass = r.getString("password");
+                    if (Utils.md5(old).equals(dbpass)){
+                        String q = "UPDATE users SET password = ? WHERE id = ?";
+                        PreparedStatement p = c.conn.prepareStatement(q);
+                        p.setString(1, Utils.md5(newP));
+                        p.setInt(2, User.UserId);
+                        p.executeUpdate();
+                    }
+                    else{
+                        Error2Lbl.setText("Incorrect Password");
+                    }
+                }
+                c.close();
+                w2.dispose();
+                OldFld.setText("");
+                NewFld.setText("");
+                ConfFld.setText("");
+            }catch (SQLException ex){
+                System.out.println(ex.getMessage());
+            }
+            
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -310,11 +412,15 @@ public class Profile extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPasswordField ConfFld;
     private javax.swing.JTextField EmailFld;
     private javax.swing.JLabel Error1Lbl;
+    private javax.swing.JLabel Error2Lbl;
     private javax.swing.JTextField FnameFld;
     private javax.swing.JTextField LnameFld;
     private javax.swing.JTextField MobileFld;
+    private javax.swing.JPasswordField NewFld;
+    private javax.swing.JPasswordField OldFld;
     private javax.swing.JTextField UnameFld;
     private clientapp.Banner banner1;
     private javax.swing.JButton jButton1;
@@ -323,7 +429,6 @@ public class Profile extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -333,8 +438,5 @@ public class Profile extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
-    private javax.swing.JPasswordField jPasswordField3;
     // End of variables declaration//GEN-END:variables
 }

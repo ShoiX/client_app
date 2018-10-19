@@ -40,7 +40,7 @@ public class signup extends javax.swing.JPanel {
             validcontact = false;
         }
         
-        if (Fname.equals("") || Lname.equals("") || Pword.equals("") || Confirm.equals("") || Uname.equals("") || Contact.equals("")){
+        if (Fname.equals("") || Lname.equals("") || Pword.equals("") || Confirm.equals("") || Uname.equals("") || Contact.equals("") || Email.equals("")){
             l = "Please supply all fields";
         }
         
