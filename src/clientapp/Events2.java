@@ -9,6 +9,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JMenuItem;
@@ -56,6 +59,7 @@ public class Events2 extends javax.swing.JPanel {
     public int SelectedID;
     private Events2 myalias;
     DefaultTableModel model;
+    public MysqlConnect runnablecon;
     /**
      * Creates new form Events2
      */
@@ -71,15 +75,42 @@ public class Events2 extends javax.swing.JPanel {
                 int row = target.getSelectedRow();
                 if (row == -1)
                     return;
-                
+                SelectedID = Integer.parseInt(target.getModel().getValueAt(row, 0).toString());
                 if (SwingUtilities.isRightMouseButton(me)){
-                    SelectedID = Integer.parseInt(target.getModel().getValueAt(row, 0).toString());
                     System.out.println(SelectedID);
                     pop.show(me.getComponent(), me.getX(), me.getY());
                     
                 }
+                else if (me.getClickCount() == 2){
+                    OpenMemo o = new OpenMemo(SelectedID, runnablecon);
+                    o.setVisible(true);
+                }
             }
         });
+        runnablecon = new MysqlConnect();
+        Runnable refreshRunnable = new Runnable() {
+            public void run() {
+                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                model.setRowCount(0);
+                try {
+                        System.out.println("refreshing");
+                       ResultSet r = runnablecon.query("SELECT * FROM memo WHERE user_id = "+User.UserId + " AND status = 0 AND `deleted` = 0 ORDER BY schedule ASC");
+                    while (r.next()){
+                        int id = r.getInt("id");
+                        String name = r.getString("name");
+                        String message = r.getString("message");
+                        String sched = r.getString("schedule").toString();
+                        model.insertRow(jTable1.getRowCount(), new Object[] {id, name, message, sched});
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Events2.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(refreshRunnable, 0, 15, TimeUnit.SECONDS);
+
+        
     }
     public void populate(MysqlConnect conn){
         
@@ -121,7 +152,7 @@ public class Events2 extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
-        setBackground(new java.awt.Color(246, 246, 78));
+        setBackground(new java.awt.Color(0, 255, 0));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -156,6 +187,9 @@ public class Events2 extends javax.swing.JPanel {
             jTable1.getColumnModel().getColumn(3).setResizable(false);
         }
 
+        jButton1.setBackground(new java.awt.Color(1, 1, 1));
+        jButton1.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(254, 254, 254));
         jButton1.setText("Add New");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -163,6 +197,9 @@ public class Events2 extends javax.swing.JPanel {
             }
         });
 
+        jButton2.setBackground(new java.awt.Color(1, 1, 1));
+        jButton2.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(254, 254, 254));
         jButton2.setText("Refresh");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -175,16 +212,14 @@ public class Events2 extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 488, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
                         .addComponent(jButton1)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 488, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(36, Short.MAX_VALUE))
+                        .addComponent(jButton2)))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
