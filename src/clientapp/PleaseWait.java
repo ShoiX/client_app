@@ -17,6 +17,7 @@ public class PleaseWait extends javax.swing.JFrame {
     public PleaseWait(String msg) {
         initComponents();
         MsgFld.setText(msg);
+        MsgFld.setVisible(true);
     }
     
 
@@ -31,10 +32,11 @@ public class PleaseWait extends javax.swing.JFrame {
 
         MsgFld = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Please Wait");
         setAlwaysOnTop(true);
 
+        MsgFld.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         MsgFld.setText("Message Here");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -49,9 +51,9 @@ public class PleaseWait extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(27, 27, 27)
                 .addComponent(MsgFld)
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         pack();

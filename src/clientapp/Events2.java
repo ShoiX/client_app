@@ -66,7 +66,7 @@ public class Events2 extends javax.swing.JPanel {
     public Events2() {
         initComponents();
         myalias = this;
-        
+        runnablecon = new MysqlConnect();
         // create popup for table
         final RowPopup2 pop = new RowPopup2(myalias);
         jTable1.addMouseListener(new MouseAdapter(){
@@ -87,7 +87,10 @@ public class Events2 extends javax.swing.JPanel {
                 }
             }
         });
-        runnablecon = new MysqlConnect();
+        
+    }
+    public void registerRunnable(){
+
         Runnable refreshRunnable = new Runnable() {
             public void run() {
                 DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
@@ -108,9 +111,7 @@ public class Events2 extends javax.swing.JPanel {
             }
         };
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(refreshRunnable, 0, 15, TimeUnit.SECONDS);
-
-        
+        executor.scheduleAtFixedRate(refreshRunnable, 0, 25, TimeUnit.SECONDS);
     }
     public void populate(MysqlConnect conn){
         
@@ -242,7 +243,7 @@ public class Events2 extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        populate(null);
+        populate(runnablecon);
     }//GEN-LAST:event_jButton2ActionPerformed
 
 

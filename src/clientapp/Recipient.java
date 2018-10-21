@@ -37,4 +37,19 @@ public class Recipient {
             return false;
         }
     }
+    public boolean insertSchedRecipient(int id, MysqlConnect con){
+        try{
+            String query = "INSERT INTO msched_recipients (`sched_id`, `name`, `email`, `mobile`) VALUES (?,?,?,?)";
+            PreparedStatement p = con.conn.prepareStatement(query);
+            p.setInt(1, id);
+            p.setString(2, name);
+            p.setString(3, email);
+            p.setString(4, mobile);
+            p.executeUpdate();
+            return true;
+        }catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return false;
+        }
+    }
 }

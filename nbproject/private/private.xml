@@ -4,15 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/jerryco09/Documents/OOP/FinalProject/client/ClientApp/src/clientapp/NewEvent.java</file>
-            <file>file:/home/jerryco09/Documents/OOP/FinalProject/client/ClientApp/src/clientapp/Profile.java</file>
             <file>file:/home/jerryco09/Documents/OOP/FinalProject/client/ClientApp/src/clientapp/user.java</file>
-            <file>file:/home/jerryco09/Documents/OOP/FinalProject/client/ClientApp/src/clientapp/login.java</file>
             <file>file:/home/jerryco09/Documents/OOP/FinalProject/client/ClientApp/src/clientapp/signup.java</file>
             <file>file:/home/jerryco09/Documents/OOP/FinalProject/client/ClientApp/src/clientapp/Events2.java</file>
-            <file>file:/home/jerryco09/Documents/OOP/FinalProject/client/ClientApp/src/clientapp/MysqlConnect.java</file>
-            <file>file:/home/jerryco09/Documents/OOP/FinalProject/client/ClientApp/src/clientapp/OpenMemo.java</file>
+            <file>file:/home/jerryco09/Documents/OOP/FinalProject/client/ClientApp/src/clientapp/ScheduledMemo.java</file>
             <file>file:/home/jerryco09/Documents/OOP/FinalProject/client/ClientApp/src/clientapp/MainApp.java</file>
-            <file>file:/home/jerryco09/Documents/OOP/FinalProject/client/ClientApp/src/clientapp/Recipient.java</file>
             <file>file:/home/jerryco09/Documents/OOP/FinalProject/client/ClientApp/src/clientapp/RecipientsWindow.java</file>
         </group>
     </open-files>

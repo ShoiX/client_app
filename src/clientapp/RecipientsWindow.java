@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
@@ -29,7 +31,7 @@ class RowPopup extends JPopupMenu{
         delete.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                ParentWindow.parent.recipients.remove(ParentWindow.selectedRow - 1);
+                ParentWindow.rec.remove(ParentWindow.selectedRow - 1);
                 ParentWindow.updateTable();
             }
             
@@ -42,6 +44,7 @@ public class RecipientsWindow extends javax.swing.JFrame {
     public NewEvent parent;
     DefaultTableModel model;
     RecipientsWindow myalias;
+    public List<Recipient> rec;
     /**
      * Creates new form RecipientsWindow
      */
@@ -49,6 +52,30 @@ public class RecipientsWindow extends javax.swing.JFrame {
         myalias = this;
         initComponents();
         parent = n;
+        rec = parent.recipients;
+        // create popup for table
+        final RowPopup pop = new RowPopup(myalias);
+        
+        //event
+        jTable1.addMouseListener(new MouseAdapter(){
+            public void mouseClicked(MouseEvent me){
+                JTable target = (JTable)me.getSource();
+                int row = target.getSelectedRow();
+                if (row == -1)
+                    return;
+                
+                if (SwingUtilities.isRightMouseButton(me)){
+                    
+                    selectedRow = Integer.parseInt(target.getModel().getValueAt(row, 0).toString());
+                    pop.show(me.getComponent(), me.getX(), me.getY());
+                }
+            }
+        });
+    }
+    public RecipientsWindow(List<Recipient> r){
+        myalias = this;
+        initComponents();
+        rec = r;
         
         // create popup for table
         final RowPopup pop = new RowPopup(myalias);
@@ -72,8 +99,8 @@ public class RecipientsWindow extends javax.swing.JFrame {
     public void updateTable(){
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-        for(int i = 0; i < parent.recipients.size(); i++){
-            Recipient tmp = parent.recipients.get(i);
+        for(int i = 0; i < rec.size(); i++){
+            Recipient tmp = rec.get(i);
             model.insertRow(jTable1.getRowCount(), new Object[] {i+1, tmp.name, tmp.email, "63"+tmp.mobile});
         }
     }
@@ -113,7 +140,7 @@ public class RecipientsWindow extends javax.swing.JFrame {
         setAlwaysOnTop(true);
         setBackground(new java.awt.Color(231, 232, 232));
 
-        jPanel2.setBackground(new java.awt.Color(0, 255, 0));
+        jPanel2.setBackground(new java.awt.Color(0, 133, 255));
         jPanel2.setForeground(new java.awt.Color(0, 255, 54));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -336,7 +363,7 @@ public class RecipientsWindow extends javax.swing.JFrame {
             // append to parent's recipients
             
             Recipient tmpres = new Recipient(name, email, mobile);
-            parent.recipients.add(tmpres);
+            rec.add(tmpres);
             updateTable();
             formClear();
         }
@@ -373,7 +400,7 @@ public class RecipientsWindow extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RecipientsWindow(null).setVisible(true);
+                new RecipientsWindow(new ArrayList<Recipient>()).setVisible(true);
             }
         });
     }

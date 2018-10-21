@@ -37,7 +37,8 @@ public class MainApp extends javax.swing.JFrame {
         p.setField();
         p.setVisible(false);
         try{
-            events22.populate(null);
+            //events22.populate(null);
+            events22.registerRunnable();
         }catch (Exception e){
             System.out.println(e.getMessage());
         }

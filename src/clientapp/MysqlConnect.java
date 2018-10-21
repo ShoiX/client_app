@@ -79,7 +79,7 @@ public class MysqlConnect {
             conn.close();
             stmt.close();
         }catch(SQLException ex){
-            
+            System.out.println(ex.getMessage());
         }
         
     }
