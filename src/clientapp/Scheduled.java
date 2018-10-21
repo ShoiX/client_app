@@ -58,6 +58,7 @@ public class Scheduled extends javax.swing.JPanel {
     public user User;
     public MysqlConnect c;
     public int Selected;
+    public Scheduled alias = this;
     /**
      * Creates new form Scheduled
      */
@@ -79,6 +80,8 @@ public class Scheduled extends javax.swing.JPanel {
                 }
                 else if (me.getClickCount() == 2){
                     System.out.println("double");
+                    OpenSched op = new OpenSched(Selected, c, alias);
+                    op.setVisible(true);
                     
                 }
             }
