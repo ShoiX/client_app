@@ -377,13 +377,15 @@ public class NewEvent extends javax.swing.JFrame {
                     }
                     
                 }
+                wait.dispose();
                 System.out.println(InsertID);
                 JOptionPane.showMessageDialog(myalias, "Succesfully Added");
                 this.setVisible(false);
                 
-                parent.populate(con);
+                parent.populate();
+                con.close();
                 r.dispose();
-                wait.dispose();
+                
                 myalias.dispose();
             }catch (SQLException ex) {
                 System.out.println(ex.getMessage());

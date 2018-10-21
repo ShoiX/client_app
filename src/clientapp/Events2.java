@@ -46,7 +46,7 @@ class RowPopup2 extends JPopupMenu{
             else{
                 JOptionPane.showMessageDialog(events2, "An unexpected error has occured please try again");
             }
-            events2.populate(c);
+            events2.populate();
         });
         add(delete);
         //add(edit);
@@ -93,7 +93,7 @@ public class Events2 extends javax.swing.JPanel {
 
         Runnable refreshRunnable = new Runnable() {
             public void run() {
-                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                /*DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
                 model.setRowCount(0);
                 try {
                         System.out.println("refreshing");
@@ -107,24 +107,24 @@ public class Events2 extends javax.swing.JPanel {
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(Events2.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                }*/populate();
             }
         };
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(refreshRunnable, 0, 25, TimeUnit.SECONDS);
     }
-    public void populate(MysqlConnect conn){
+    public void populate(){
         
         Thread executerefresh = new Thread(() -> {
-            System.out.println("Refreshing");
-            if (conn == null)
+            System.out.println("RefreshingG");
+            /*if (conn == null)
                 c = new MysqlConnect();
             else
-                c = conn;
+                c = conn;*/
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             model.setRowCount(0);
             try {
-                   ResultSet r = c.query("SELECT * FROM memo WHERE user_id = "+User.UserId + " AND status = 0 AND `deleted` = 0 ORDER BY schedule ASC");
+                   ResultSet r = runnablecon.query("SELECT * FROM memo WHERE user_id = "+User.UserId + " AND status = 0 AND `deleted` = 0 ORDER BY schedule ASC");
                 while (r.next()){
                     int id = r.getInt("id");
                     String name = r.getString("name");
@@ -135,7 +135,7 @@ public class Events2 extends javax.swing.JPanel {
             } catch (SQLException ex) {
                 Logger.getLogger(Events2.class.getName()).log(Level.SEVERE, null, ex);
             }
-            c.close();
+            //c.close();
         });
         executerefresh.start();
     }
@@ -243,7 +243,7 @@ public class Events2 extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        populate(runnablecon);
+        populate();
     }//GEN-LAST:event_jButton2ActionPerformed
 
 

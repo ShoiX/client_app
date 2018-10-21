@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 
@@ -28,11 +29,11 @@ public class ScheduledMemo extends javax.swing.JFrame {
     RecipientsWindow w;
     private int UserID;
     PleaseWait wait;
-    
+    Scheduled parent;
     /**
      * Creates new form ScheduledMemo
      */
-    public ScheduledMemo(int uid) {
+    public ScheduledMemo(int uid, Scheduled p) {
         initComponents();
         SchedFld.add("DAILY");
         SchedFld.add("WEEKLY");
@@ -42,7 +43,7 @@ public class ScheduledMemo extends javax.swing.JFrame {
         w.setVisible(false);
         UserID = uid;
         wait = new PleaseWait("Verifying Request..");
-        
+        parent = p;
     }
 
     /**
@@ -79,10 +80,11 @@ public class ScheduledMemo extends javax.swing.JFrame {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
+        setBackground(new java.awt.Color(0, 133, 255));
 
-        jPanel1.setBackground(new java.awt.Color(253, 253, 96));
+        jPanel1.setBackground(new java.awt.Color(0, 133, 255));
 
         jLabel1.setText("Name");
 
@@ -130,10 +132,10 @@ public class ScheduledMemo extends javax.swing.JFrame {
             }
         });
 
-        isemail.setBackground(new java.awt.Color(255, 238, 0));
+        isemail.setBackground(new java.awt.Color(0, 133, 255));
         isemail.setText("By Email");
 
-        issms.setBackground(new java.awt.Color(255, 242, 0));
+        issms.setBackground(new java.awt.Color(0, 133, 255));
         issms.setText("By SMS");
 
         ErrorLbl.setForeground(new java.awt.Color(242, 13, 0));
@@ -315,6 +317,9 @@ public class ScheduledMemo extends javax.swing.JFrame {
                 recipients.get(i).insertSchedRecipient(InsertID, c);
             }
             wait.dispose();
+            parent.populate();
+            JOptionPane.showMessageDialog(parent, "Succesfully Added");
+            this.dispose();
             //c.close();
         }catch (SQLException ex){
             System.out.println(ex.getMessage());
@@ -351,7 +356,7 @@ public class ScheduledMemo extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ScheduledMemo(16).setVisible(true);
+                new ScheduledMemo(16, null).setVisible(true);
             }
         });
     }
